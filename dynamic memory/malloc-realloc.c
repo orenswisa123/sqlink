@@ -5,8 +5,8 @@ int* insert(int,int*,int*,int*);
 
 int main()
 {
-	int j=0,num=0,capacity,i;
-	int* ip;
+	int j=0,num=0;
+	int* ip,capacity,i;
 	i=0;
 	capacity=6;
 	ip=malloc(capacity*sizeof(int));
@@ -29,19 +29,24 @@ int main()
 
 int* insert(int n,int* ptr,int* idx,int* cap)
 {
+	int*temp=ptr;
 	if(*(idx)>=*cap)
 	{
-		
-		ptr=realloc(ptr,(*cap+1)*sizeof(int));
-		ptr[*idx]=n;
-		(*idx)++;
-		(*cap)++;
+		temp=realloc(ptr,(*cap*2)*sizeof(int));
+		if(temp!=NULL)/*check if pointer is ok*/
+		{
+			ptr=temp;
+			(*cap)*=2;/*make capacity dual*/
+		}
+		else
+		{
+			return ptr;
+		}
 	}
-	else
-	{
-		ptr[*idx]=n;
-		(*idx)++;
-	}
+
+	ptr[*idx]=n;
+	(*idx)++;
+
 	return ptr;
 }
 
