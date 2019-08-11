@@ -1,13 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "h_DA.h"
 
 int main()
 {
 
 	int capacity=0,num=0;
-	printf("enter number: ");
-	scanf("%d",&capacity);
-	DA_t* Da1;	
+	DA_t* Da1= NULL;
+
+	printf("enter capacity: ");
+	scanf("%d",&capacity);	
 	Da1=createDA(capacity);
 	
 	

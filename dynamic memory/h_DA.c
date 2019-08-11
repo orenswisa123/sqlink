@@ -17,14 +17,15 @@ DA_t* createDA(int capacity)
 }
 int insert(DA_t* da_ptr,int num)
 {
-	DA_t temp=(da_ptr->arr);
-	if(da_ptr->index)>=(da_ptr->capacity))
+	int *temp=(da_ptr->arr);
+	if((da_ptr->index)>=(da_ptr->capacity))
 	{
 		temp=realloc((da_ptr->arr),((da_ptr->capacity)*2)*sizeof(int));
-		if(temp!=NULL)/*check if pointer is ok*/
+		if(temp)/*check if pointer is ok*/
 		{
 			(da_ptr->arr)=temp;
-			(*cap)*=2;/*make capacity dual*/
+			(da_ptr->capacity)*=2;/*make capacity dual*/
+			
 		}
 		else
 		{
@@ -32,8 +33,8 @@ int insert(DA_t* da_ptr,int num)
 		}
 	}
 
-	da_ptr->index=num;
-	((da_ptr->index))++;
+	da_ptr->arr[da_ptr->index]=num;
+			((da_ptr->index))++;
 
 	return 1;
 }
@@ -46,7 +47,7 @@ void printDA(DA_t* da_ptr)
 	printf("%d",da_ptr->arr[i]);
 	}
 }
-void destroy(DA_t* da_ptr)
+void destroyDA(DA_t* da_ptr)
 {
 	free(da_ptr->arr);
 	free(da_ptr);

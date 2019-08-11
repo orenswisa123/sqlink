@@ -1,5 +1,5 @@
-#ifndef DA_t
-#define DA_t
+#ifndef DA_T
+#define DA_T
 typedef struct{
 	int* arr;
 	int capacity;
