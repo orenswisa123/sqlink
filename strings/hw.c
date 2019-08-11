@@ -48,7 +48,7 @@ int main()
 			break;
 		
 			case 4:
-				printf("%d",location(s1,s2));
+				printf("%d",location(s1,s3));
 			break;
 		
 			default:
