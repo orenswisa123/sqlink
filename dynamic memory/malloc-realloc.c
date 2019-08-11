@@ -5,8 +5,8 @@ int* insert(int,int*,int*,int*);
 
 int main()
 {
-	int j=0,num=0;
-	int* ip,capacity,i;
+	int j=0,num=0,capacity,i;
+	int* ip;
 	i=0;
 	capacity=6;
 	ip=malloc(capacity*sizeof(int));
