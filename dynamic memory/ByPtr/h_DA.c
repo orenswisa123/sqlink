@@ -13,7 +13,7 @@ DA_t* createDA(int capacity)
 	{
 		(*Da1).capacity=capacity;
 		(*Da1).index=0;
-		(*Da1).arr=malloc(capacity*sizeof(int));
+		(*Da1).arr=malloc(capacity*sizeof(int*));
 		if((*Da1).arr==NULL)
 		{
 			free(Da1);
@@ -22,14 +22,14 @@ DA_t* createDA(int capacity)
 	}
 	return Da1;
 }
-int insert(DA_t* da_ptr,int num)
+int insert(DA_t* da_ptr,int* num_ptr)
 {
-	if(da_ptr!=NULL)
+	if((da_ptr!=NULL)&&(num_ptr!=NULL))
 	{
-	int *temp=(da_ptr->arr);/*temporary pointer to not erase the original*/
+	int **temp=(da_ptr->arr);/*temporary pointer to not erase the original*/
 	if((da_ptr->index)>=(da_ptr->capacity))
 	{
-		temp=realloc((da_ptr->arr),((da_ptr->capacity)*2)*sizeof(int));
+		temp=realloc((da_ptr->arr),((da_ptr->capacity)*2)*sizeof(int*));
 		if(temp)  /*check if pointer is ok*/
 		{
 			(da_ptr->arr)=temp;
@@ -38,13 +38,15 @@ int insert(DA_t* da_ptr,int num)
 		}
 		else
 		{
+			free(num_ptr);
+			free(da_ptr->arr);
+			free(da_ptr);
 			return 0;
 		}
 	}
 
-	da_ptr->arr[da_ptr->index]=num;
-			((da_ptr->index))++;
-
+	da_ptr->arr[da_ptr->index]=num_ptr;
+	((da_ptr->index))++;
 	return 1;
 	}
 	return 0;
@@ -57,15 +59,18 @@ void printDA(DA_t* da_ptr)
 		int i=0;
 		for(i=0;i<(da_ptr->index);i++)
 		{
-			printf("%d ",da_ptr->arr[i]);
+			printf("%d ",*(da_ptr->arr[i]));
 		}
 		printf("\n");
 	}
 }
 void destroyDA(DA_t* da_ptr)
 {
+	int i=0;
 	if(da_ptr!=NULL)
 		{
+			for(i=0;i<da_ptr->index;i++)
+				free(da_ptr->arr[i]);
 		free(da_ptr->arr);
 		free(da_ptr);
 		}
