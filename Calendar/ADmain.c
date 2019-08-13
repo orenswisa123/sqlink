@@ -55,7 +55,7 @@ int main()
                   }
                   else
                   {
-                      printf("your meeting is %f - %f in room %d ",m_ptr->beginT, m_ptr->endT , m_ptr->RoomNuum);
+                      printf("your meeting is %f - %f in room %d ",m_ptr->beginT, m_ptr->endT , m_ptr->RoomNum);
                   }
                   break;
             case 6:
@@ -77,5 +77,6 @@ int main()
         
       return 0;
 }
+
 
 

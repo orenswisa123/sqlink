@@ -20,7 +20,7 @@ AD* create_AD(int capacity)
 }
 Meeting* create_meeting()
 {
-	Meeting M;
+	Meeting* M;
 	M=malloc(sizeof(Meeting));
 	if(M==NULL)
 		return NULL;
@@ -32,20 +32,18 @@ Meeting* create_meeting()
 	scanf("%f",&bT);
 	printf("enter end time of the meeting :\n");
 	scanf("%f",&eT);
-	}while((bT<0||eT>24||bT>24||eT<0)&&(eT>bT))   /*end of loop only if the time is ok*/
+	}while((bT<0||eT>24||bT>24||eT<0)&&(eT>bT));  /*end of loop only if the time is ok*/
 	printf("enter room number :\n");
 	scanf("%d",&RNum);
 	M->beginT=bT;
 	M->endT=eT;
 	M->RoomNum=RNum;
 	return M;
-	else
-	return NULL;
 }
 int insert_appointment_into_AD(AD* ad_ptr,Meeting* m_ptr)
 {	
 	int i,place;
-	Meeting **temp=(ad_ptr->meetings)    /*temporary pointer to not erase the original*/
+	Meeting **temp=(ad_ptr->meetings);    /*temporary pointer to not erase the original*/
 	if((ad_ptr==NULL)||(m_ptr==NULL))
 	{
 		return 0;
@@ -58,11 +56,11 @@ int insert_appointment_into_AD(AD* ad_ptr,Meeting* m_ptr)
 		}   
 		else 
 		{
-			if (ad_ptr->meetings[0]->beginT) >= (m_ptr->endT)
+			if((ad_ptr->meetings[0]->beginT)>=(m_ptr->endT))
 			{
-		for(i=ad_ptr->index;i>0;i--)
-			ad_ptr->meetings[i]=ad_ptr_meetings[i+1];
-			if((da_ptr->index)>=(da_ptr->capacity))
+			for(i=ad_ptr->index;i>0;i--)
+			ad_ptr->meetings[i]=ad_ptr->meetings[i+1];
+			if((ad_ptr->index)>=(ad_ptr->capacity))
 			{
 				temp=realloc((ad_ptr->meetings),((ad->capacity)*2)*sizeof(Meeting*)); /*realloc*/
 				if(temp)  /*check if pointer is ok*/
@@ -161,7 +159,7 @@ void destroy(AD*  ad_ptr){
   if(ad_ptr!=NULL){
          for(i=0;i<ad_ptr->index;i++){
               if(ad_ptr->meetings!=NULL){
-                  free(ca->day[i]);
+                  free(ad_ptr->meetings[i]);
               }
     }
 
