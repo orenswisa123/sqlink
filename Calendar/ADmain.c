@@ -12,9 +12,10 @@ int main()
      Meeting* m_ptr;
      printf("enter a capacity ");
      scanf("%d",&capacity);
+     ad_ptr=create_AD(capacity);
+              
 	
 	 while(choose!=-1){
-        printf("press 1 for createAD \n");
         printf("press 2 for createMeeting \n");
         printf("press 3 for insert \n");
         printf("press 4 for remove \n");
@@ -23,9 +24,7 @@ int main()
         scanf("%d",&choose);
         switch(choose)
         {
-            case 1:
-                  ad_ptr=create_AD(capacity);
-                  break;
+           
             case 2:
                   m_ptr=create_meeting();
                   break;
@@ -39,14 +38,14 @@ int main()
             case 4:
                   printf("  enter begin hour to remove meeting ");
                   scanf(" %f",&begin);
-                  ans=remove_appointment_from_AD(ad_ptr,begin);
+                  ans=m_remove_appointment_from_AD(ad_ptr,begin);
                   if(ans==0)
                   {
                     printf("cant remove ");
                   }
                   break;
             case 5:
-                  printf(" find your meeting, enter a begin hour ");
+                  printf(" find your meeting, enter a begin hour \n");
                   scanf(" %f",&begin);
                   m_ptr=Find(ad_ptr,begin);
                   if(m_ptr==NULL)

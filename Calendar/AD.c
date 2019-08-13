@@ -11,7 +11,7 @@ AD* create_AD(int capacity)
 	else
 	{
 		ADarr->capacity=capacity;
-		ADarr->index=0;
+		ADarr->index = 0;
 		ADarr->meetings=malloc(capacity*sizeof(Meeting*));
 		if(ADarr->meetings==NULL)
 			free(ADarr);
@@ -20,12 +20,12 @@ AD* create_AD(int capacity)
 }
 Meeting* create_meeting()
 {
+	float bT=0,eT=0;
+	int RNum=0;
 	Meeting* M;
 	M=malloc(sizeof(Meeting));
 	if(M==NULL)
 		return NULL;
-	float bT,eT;
-	int RNum=0;
 	do
 	{
 	printf("enter begin time of the meeting :\n");
@@ -43,68 +43,79 @@ Meeting* create_meeting()
 int insert_appointment_into_AD(AD* ad_ptr,Meeting* m_ptr)
 {	
 	int i,place;
-	Meeting **temp=(ad_ptr->meetings);    /*temporary pointer to not erase the original*/
+	Meeting **temp=(ad_ptr->meetings); 
+	   /*temporary pointer to not erase the original*/
 	if((ad_ptr==NULL)||(m_ptr==NULL))
 	{
 		return 0;
 	}
-		if(ad_ptr->index==0)
-		{
-			ad_ptr->meetings[0]=m_ptr;
-			((ad_ptr->index))++; 
-			return 1;  
-		}   
-		else 
-		{
-			if((ad_ptr->meetings[0]->beginT)>=(m_ptr->endT))
+	if(ad_ptr->index==0)
+	{
+		if((ad_ptr->index)>=(ad_ptr->capacity))
 			{
-			for(i=ad_ptr->index;i>0;i--)
-			ad_ptr->meetings[i]=ad_ptr->meetings[i+1];
-			if((ad_ptr->index)>=(ad_ptr->capacity))
-			{
-				temp=realloc((ad_ptr->meetings),((ad->capacity)*2)*sizeof(Meeting*)); /*realloc*/
+				temp=realloc((ad_ptr->meetings),((ad_ptr->capacity)*2)*sizeof(Meeting*)); /*realloc*/
 				if(temp)  /*check if pointer is ok*/
 				{
 					(ad_ptr->meetings)=temp;
 					(ad_ptr->capacity)*=2;/*make capacity dual*/
 				}
-				ad_ptr->meetings[0]=m_ptr;
-				((ad_ptr->index))++;
-				return 1;
 			}
-		if(ad_ptr->meetings[ad_ptr->index]->endT <= (m_ptr->beginT)
-		   {
-			 ad_ptr->meetings[(ad_ptr->index)+1]=m_ptr;
-			 ((ad_ptr->index))++;
-			 return 1;
-		   }
-		for(i=1;i<(da_ptr->index);i++)
+		ad_ptr->meetings[0]=m_ptr;
+		((ad_ptr->index))++; 
+		return 1;
+			
+	}
+	else if((ad_ptr->meetings[0]->beginT)>=(m_ptr->endT))
+	{
+		if((ad_ptr->index)>=(ad_ptr->capacity))
 		{
-			if((m_ptr->beginT)>=(ad_ptr->meetings[i-1]->endT)&&(m_ptr->endT)<=(ad_ptr->meetings[i]->beginT)
+			ad_ptr=func_real(ad_ptr);	
+		}
+		for(i=ad_ptr->index ; i>0 ; i--) /*shift right*/
+			ad_ptr->meetings[i]=ad_ptr->meetings[i-1];
+
+		ad_ptr->meetings[0]=m_ptr;
+		((ad_ptr->index))++;
+		return 1;
+	}
+	else if((ad_ptr->meetings[ad_ptr->index-1]->endT) <= (m_ptr->beginT))
+	{
+		if((ad_ptr->index)>=(ad_ptr->capacity))
+		{
+			ad_ptr=func_real(ad_ptr);
+		}
+		ad_ptr->meetings[(ad_ptr->index) + 1] = m_ptr;
+		((ad_ptr->index))++;
+		return 1;
+	}
+		else /*not first and not last*/
+		{
+
+			for(i=1;i<(ad_ptr->index);i++)
 			{
-				place=i;
-				for(i=ad_ptr->index;i>place;i--)
-				ad_ptr->meetings[i]=ad_ptr_meetings[i-1];
-				if((da_ptr->index)>=(da_ptr->capacity))
+									
+				if((m_ptr->beginT) >= (ad_ptr->meetings[i-1]->endT) &&(m_ptr->endT) <= (ad_ptr->meetings[i]->beginT))
 				{
-					temp=realloc((ad_ptr->meetings),((ad->capacity)*2)*sizeof(Meeting*));  /*realloc*/
-					if(temp)  /*check if pointer is ok*/
+					if((ad_ptr->index)>=(ad_ptr->capacity))
 					{
-						(ad_ptr->meetings)=temp;
-						(ad_ptr->capacity)*=2;/*make capacity dual*/
+					ad_ptr=func_real(ad_ptr);
 					}
-				ad_ptr->meetings[place]=m_ptr;
-				((ad_ptr->index))++;
-				return 1;
+					place=i;
+					for(i=ad_ptr->index ; i>place ; i--)
+						ad_ptr->meetings[i]=ad_ptr->meetings[i-1];
+
+					ad_ptr->meetings[place]=m_ptr;
+					((ad_ptr->index))++;
+					return 1;
 				}
 			}
 		}
-		return 0;
-   }
+			
+		}
 
-}	
 
-int remove_appointment_from_AD(AD* ad_ptr,float begin){
+int m_remove_appointment_from_AD(AD* ad_ptr,float begin)
+{
    int i=0,j=0;
       
       if(ad_ptr!=NULL){
@@ -148,27 +159,45 @@ void print(AD* ad_ptr){
     for(i=0;i<ad_ptr->index;i++){
        printf("begin hour= %f ",ad_ptr->meetings[i]->beginT);
        printf("end hour= %f ",ad_ptr->meetings[i]->endT);
-       printf("room number= %d ",ad_ptr->meetings[i]->RoomNum);
+       printf("room number= %d \n",ad_ptr->meetings[i]->RoomNum);
     }
   }
 
 }
 
-void destroy(AD*  ad_ptr){
+void destroy(AD*  ad_ptr)
+{
   int i=0;
-  if(ad_ptr!=NULL){
-         for(i=0;i<ad_ptr->index;i++){
-              if(ad_ptr->meetings!=NULL){
+  if(ad_ptr!=NULL)
+	{
+         for(i=0;i<ad_ptr->index;i++)
+         {
+              if(ad_ptr->meetings!=NULL)
+		{
                   free(ad_ptr->meetings[i]);
-              }
-    }
+                }
+   	 }
 
          free(ad_ptr->meetings);
          free(ad_ptr);
-   }
+   	 }
   
 
 }
+
+AD* func_real(AD* ad_ptr)
+{
+	ad_ptr=realloc((ad_ptr->meetings),((ad_ptr->capacity)*2)*sizeof(Meeting*)); /*realloc*/
+	if(temp)  /*check if pointer is ok*/
+	{
+		(ad_ptr->meetings) = temp;
+		(ad_ptr->capacity)*=2;/*make capacity dual*/
+	}
+return ad_ptr;
+}
+
+
+
 
 	
 	
