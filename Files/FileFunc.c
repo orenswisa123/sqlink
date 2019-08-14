@@ -3,8 +3,6 @@
 #include "FileFunc.h"
 
 
-
-
 void countLetters(char *f_name)
 {
  int num,i;
@@ -50,30 +48,48 @@ void countLetters(char *f_name)
 
 
 
-void N_line(int n,char *f_name)
+void N_line(int n,char *f_name) /*need fix*/
 {
 	int *LNL; /*last N lines*/
 	char c[512];
-	int i=0;
+	int i=0,EndLocation;
 	FILE *fp;
 	LNL=malloc(n*sizeof(int));
     if ((fp = fopen(f_name, "r")) != NULL)
     {
+		fseek(fp,0,2);
+		EndLocation=ftell(fp);
+		fseek(fp,0,0);
+
 		while(!feof(fp))
 		{
 			LNL[i%n]=ftell(fp);
 			fgets(c,512,fp);
+			if(ftell(fp)==EndLocation)
+			{
+				break;
+			}
+
 			i++;
 		}
-		fseek(fp,LNL[i%n],0);;
+		fseek(fp,0,2);
+		EndLocation=ftell(fp);
+		fseek(fp,LNL[(i+1%n)],0);
 		while(!feof(fp))
 		{
 			fgets(c,512,fp);
 			printf("%s\n",c);
+			if(ftell(fp)==EndLocation)
+			{
+				break;
+			}	
 		}
 		fclose(fp);
 		free(LNL);
 	}
 }
+
+
+
 	
 
