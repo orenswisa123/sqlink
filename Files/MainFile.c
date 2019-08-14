@@ -8,7 +8,7 @@ int main()
 {
 	int option=0;
 	int NOL=0; /*num of lines*/
-	char *f_name=NULL;
+	char f_name[32];
 	while(option!=-1)
 	{
 		printf("press 1 for last N lines function \n");
