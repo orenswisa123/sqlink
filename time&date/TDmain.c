@@ -103,6 +103,70 @@ int main()
             printf("enter an seconds ");
             scanf("%d", &sec);
             updateT(time1, hour, min, sec);
+            TimeOption=0;
+            while (TimeOption != -1)
+            {
+                printf("\npress 3 to create another time \n");
+                printf("press 4 to add second time to first \n");
+                printf("press 5 to update the first date \n");
+                printf("press 6 to get the year \n");
+                printf("press 7 to get the month \n");
+                printf("press 8 to get the day \n");
+                printf("press 9 to know if year is leap \n");
+                printf("press -1 to exit \n");
+                scanf("%d", &DateOption);
+                switch (TimeOption)
+                {
+                case 3:
+                {   
+                    
+                    d2 = Create_Date();
+
+
+                }
+                break;
+                case 4:
+                {   
+                    AddDate(d1,d2);
+                }
+                break;
+                case 5:
+                {
+                    UpdateDate(d1);
+                }
+                break;
+                case 6:
+                {
+                    printf("%d\n", getYear(d1));
+                }
+                break;
+                case 7:
+                {
+                    printf("%d\n", getMonth(d1));
+                }
+                break;
+                case 8:
+                {
+                    printf("%d\n", getDay(d1));
+                }
+                break;
+                case 9:
+                {
+                    if(ifLeapYear(d1))
+                    {   
+                        printf("the year is leap\n");
+                    }
+                    else
+                    {
+                        printf(" year is not leap\n");
+                    }
+                    
+                }   
+                break;
+                default:
+                    break;
+                }
+            }
             printf("enter a format to print 1 or 2 ");
             scanf("%d", &format);
             printTime(time1, format);

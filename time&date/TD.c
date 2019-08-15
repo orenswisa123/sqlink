@@ -150,3 +150,69 @@ int ifLeapYear(date_t * d1)
     }
     return 0;
 }
+
+
+cTime_t * updateT(cTime_t * time,int hour,int min,int sec){
+   time->hour=hour;
+   time->min=min;
+   time->sec=sec;
+   return time;
+
+}
+
+void printTime(cTime_t * time,int format){
+if (time!=NULL){
+  if(format==1){ 
+    printf(" %d:%d:%d \n",time->hour,time->min,time->sec);
+    
+  }else if(format==2){
+       
+            printf(" %d:%d:%d  %s  \n",time->hour%12,time->min,time->sec,((time->hour)>=12)?"PM":"AM");
+       
+  }else{
+     printf("your format is not good");
+  }
+
+}
+
+}
+
+int getHour(cTime_t * time){
+ if (time!=NULL){
+
+   return time->hour;
+ }
+ return 0;
+}
+int getMin(cTime_t * time){
+  if (time!=NULL){
+
+   return time->min;
+  }
+ return 0;
+}
+int getSec(cTime_t * time){
+ if (time!=NULL){
+
+   return time->sec;
+ }
+ return 0;
+}
+
+
+cTime_t * add(cTime_t * time1,cTime_t * time2){
+  if ((time1!=NULL)&&(time2!=NULL)){
+
+     int secD,minD;
+     secD=(time1->sec+time2->sec)/60;
+     minD=(time1->min+time2->min+secD)/60;
+     time1->sec=(time1->sec+time2->sec)%60;
+     time1->min=(time1->min+time2->min+secD)%60;
+     time1->hour=(time1->hour+time2->hour+minD)%24;
+     
+     return time1;
+
+   }
+ return NULL;
+
+}
