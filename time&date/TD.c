@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "TD.h"
 
-static CheckDate(int,int,int);
+static int CheckDate(int,int,int);
 static char* MonthName(date_t*);
 
 
@@ -35,9 +35,7 @@ void AddDate(date_t *d1,date_t *d2)
     {
         mdays[1]=29;
     }
-    printf("%d,%d\n", d1->day, DTA2);
         d1->day=d1->day+DTA2;
-    printf("%d\n", d1->day);
     if( d1->day > mdays[d1->month-1])
     {
         d1->day = d1->day - mdays[d1->month - 1];
@@ -140,4 +138,15 @@ int getMonth(date_t *d1)
 int getDay(date_t *d1)
 {
     return d1->day;
+}
+int ifLeapYear(date_t * d1)
+{
+    if (d1 != NULL)
+    {
+        if (d1->year % 4 == 0)
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
