@@ -5,6 +5,7 @@
 int main()
 {
     int option = 0, DateOption = 0, TimeOption = 0;
+    int hour,min,sec,format,day,mon,year,sumDays;
     while (option != -1)
     {
         printf("press 1 for Date \n");
@@ -89,8 +90,8 @@ int main()
             free(d2);
             
         }
-        case 2:
-        {
+       /* case 2:
+      {
             cTime_t *time1;
             cTime_t *time2;
             time1 = malloc(sizeof(cTime_t));
@@ -119,7 +120,7 @@ int main()
             add(time1, time2);
             printTime(time1, format);
 
-        }
+        }*/
         }
     }
     return 0;
