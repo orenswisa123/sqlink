@@ -15,6 +15,7 @@ int BitOff(BitMap *BM,int n);
 int BitStat(BitMap *BM,int n);
 void destroy (BitMap *B1);
 void toBinari(int v);
+int calculate(BitFunc f,BitMap* BM,int n);
 
 
 #endif

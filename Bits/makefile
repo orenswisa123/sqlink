@@ -26,7 +26,7 @@ SRCS = *.c
 OBJS = $(SRCS:.c=.o)
 
 # define the name of executable file 
-MAIN = bits
+MAIN = bits_exe
 
 #--------------------------------------------------------------------
 # The following part of the makefile is generic; it can be used to 

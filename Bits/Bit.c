@@ -5,6 +5,11 @@
 
 static int ReqInt(int);
 
+
+int calculate(BitFunc f,BitMap* BM,int n){
+	return f(BM,n); 
+}
+
 BitMap* Create_BM(int NumberFitcher)
 {
     BitMap *B1;
@@ -23,7 +28,6 @@ BitMap* Create_BM(int NumberFitcher)
     {
         NumberOfInt = (NumberFitcher/(8*sizeof(int))) +1 ;
     }
-    
     arr=calloc(NumberOfInt,sizeof(int));
     if(arr==NULL)
     {
