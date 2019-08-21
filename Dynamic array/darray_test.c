@@ -3,23 +3,41 @@
 #include <stdlib.h>
 #include "darray_int.h"
 
-int main ()
-{
-    darray *myDarray;
-    int myInt;
-    darrayCreate(&myDarray, 100);
-    darrayAdd(myDarray, 8);
-    darrayAdd(myDarray, 9);
-    darrayAdd(myDarray, 15);
-
-
-    darrayDelete(myDarray,&myInt);
-    printf("%d\n", myInt); /*15*/
-    darrayDelete(myDarray,&myInt);
-    printf("%d\n", myInt); /*9*/
-    darrayDelete(myDarray,&myInt);
-    printf("%d\n", myInt); /*8*/
-
-    return 1;
-
+int main()
+{   darray *ptrDarr;
+    int item,i,index,numOfItems;
+    int initial_capacity;
+    printf("Enter initial_capacity\n");
+    scanf("%d",&initial_capacity); 
+    darrayCreate(&ptrDarr, initial_capacity);
+    printf("Enter item to add\n");
+    scanf("%d",&item); 
+    while(item !=-1)
+    {   darrayAdd(ptrDarr,item);
+        printf("Enter item to add\n");
+        scanf("%d",&item); 
+       
+    }
+    printDarray(ptrDarr);
+  
+         
+    darrayDelete(ptrDarr,&item);
+    printDarray(ptrDarr);
+    darrayDelete(ptrDarr,&item);
+    printDarray(ptrDarr);
+    darrayItemsNum(ptrDarr,&numOfItems);
+    printf("num of items=%d\n",numOfItems);
+    printf("Enter index to get\n");
+    scanf("%d",&index); 
+    darrayGet(ptrDarr, index, &item);
+    printf("item=%d\n",item);
+    printf("Enter index to set\n");
+    scanf("%d",&index); 
+    item=5;
+    darraySet(ptrDarr, index,item);
+    printDarray(ptrDarr);
+    darraySort(ptrDarr);
+    printDarray(ptrDarr);
+    
+    return 0;
 }

@@ -13,20 +13,20 @@ struct darray{
 };
 
 
-AdtStatus darrayCreate(darray *dArr, size_t initial_capacity)
+AdtStatus darrayCreate(darray **dArr, size_t initial_capacity)
 {
     dArr=malloc(sizeof(darray));
     if(dArr==NULL)
     {
         return AllocationError;
     }
-    dArr->_capacity=initial_capacity;
-    dArr->_index=0;
-    dArr->_initial_capacity=initial_capacity;
-    dArr->_arrNum=malloc(initial_capacity*sizeof(int));
-    if(dArr->_arrNum==NULL)
+    (*dArr)->_capacity=initial_capacity;
+    (*dArr)->_index=0;
+    (*dArr)->_initial_capacity=initial_capacity;
+    (*dArr)->_arrNum=malloc(initial_capacity*sizeof(int));
+    if((*dArr)->_arrNum==NULL)
     {
-        free(dArr);
+        free(*dArr);
         return AllocationError;
     }
     return OK;
@@ -40,11 +40,11 @@ AdtStatus darrayDestroy(darray *dArr)
 
 AdtStatus  darrayAdd(darray *dArr,  int  _item)
 {
+    int *temp;
     if(dArr==NULL)
     {
         return AllocationError;
     }
-    int *temp;
     if(dArr->_index>=dArr->_capacity)
     {
        temp=realloc(dArr->_arrNum,(dArr->_capacity)*2*sizeof(int));
@@ -61,11 +61,11 @@ AdtStatus  darrayAdd(darray *dArr,  int  _item)
 }
 AdtStatus   darrayDelete(darray *dArr,  int* _item)
 {
+    int *temp;
     if(dArr==NULL)
     {
         return AllocationError;
     }
-    int *temp;
     _item=&dArr->_arrNum[dArr->_index];
     if((dArr->_index<=dArr->_capacity*3/8)&&(dArr->_initial_capacity!=dArr->_capacity))
     {
@@ -118,11 +118,11 @@ AdtStatus   darrayItemsNum(darray *dArr, int*  _numOfItems)
 }
 AdtStatus darraySort(darray *dArr)
 {
+    int i, j;
     if (dArr == NULL)
     {
         return AllocationError;
     }
-    int i, j;
     for (i = 0; i < dArr->_index - 1; i++)
     {
         for (j = 0; j < dArr->_index - i - 1; j++)
@@ -135,6 +135,22 @@ AdtStatus darraySort(darray *dArr)
     }
 
 }
+AdtStatus printDarray(darray *dArr)
+{
+    int i;
+    if ((dArr) == NULL)
+    {
+        return   AllocationError;
+        
+    }  
+    for(i=0;i<dArr->_index;i++)
+    {
+        printf("%d",dArr->_arrNum[i]);
+    }
+    printf("\n");
+    return  OK;
+}
+
 static void swap(int *xp, int *yp) 
 { 
     int temp = *xp; 
