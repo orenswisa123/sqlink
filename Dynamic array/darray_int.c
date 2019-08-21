@@ -15,24 +15,30 @@ struct darray{
 
 AdtStatus darrayCreate(darray **dArr, size_t initial_capacity)
 {
-    dArr=malloc(sizeof(darray));
+    *dArr=malloc(sizeof(darray));
     if(dArr==NULL)
     {
         return AllocationError;
     }
-    (*dArr)->_capacity=initial_capacity;
-    (*dArr)->_index=0;
-    (*dArr)->_initial_capacity=initial_capacity;
-    (*dArr)->_arrNum=malloc(initial_capacity*sizeof(int));
+	(*dArr)->_arrNum=malloc(initial_capacity*sizeof(int));
     if((*dArr)->_arrNum==NULL)
     {
         free(*dArr);
         return AllocationError;
     }
+    (*dArr)->_capacity=initial_capacity;
+    (*dArr)->_index=0;
+    (*dArr)->_initial_capacity=initial_capacity;
+    
+
     return OK;
 }
 AdtStatus darrayDestroy(darray *dArr)
 {
+    if(dArr==NULL)
+    {
+
+    }
     free(dArr->_arrNum);
     free(dArr);
     return OK;
@@ -90,11 +96,11 @@ AdtStatus   darrayGet(darray *dArr, size_t _index, int *_item)
     {
         return IndexError;
     }
-    _item=&dArr->_arrNum[_index];
+    *_item=dArr->_arrNum[_index];
     return OK;
 }
 
-AdtStatus   darraySet(darray *dArr, size_t _index, int  _item)
+AdtStatus   darraySet(darray *dArr, size_t _index, int  _item) 
 {
     if (dArr == NULL)
     {
@@ -113,7 +119,7 @@ AdtStatus   darrayItemsNum(darray *dArr, int*  _numOfItems)
     {
         return AllocationError;
     }
-    _numOfItems=&dArr->_index;
+    *_numOfItems=dArr->_index;
     return OK;
 }
 AdtStatus darraySort(darray *dArr)

@@ -19,8 +19,8 @@ int main()
        
     }
     printDarray(ptrDarr);
-  
-         
+
+    
     darrayDelete(ptrDarr,&item);
     printDarray(ptrDarr);
     darrayDelete(ptrDarr,&item);
