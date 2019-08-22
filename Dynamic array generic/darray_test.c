@@ -5,6 +5,9 @@
 typedef enum menu{createArr=1,destroyArr=2,addStruct=3,deleteStruct=4,get=5,set=6,returnSize=7,sortArr=8}menu;
 int printMenu();
 void destroyFunc1(void*, void*);
+void printPoint(void *_elem);
+int compareFunc1(void *, void *);
+
 
 typedef struct 
 {
@@ -16,7 +19,7 @@ points* createStruct();
 
 int main()
 {   
-    int opt=10,numOfItems;
+    int opt=10,numOfItems,error;
     FILE *fp;
     void* itemAdd;
     void *itemDel;
@@ -54,14 +57,18 @@ int main()
 			case deleteStruct:
 			{
 				darrayDelete(darr,&itemDel);
-                free(itemDel);
+                /*free(itemDel);*/
 				break;
 			}
 			case get:
 			{
 				printf("Insert index of item that you want to get\n\n");
 				scanf("%d",&idxGet);
-				darrayGet(darr,idxGet,getItem);
+				error=darrayGet(darr,idxGet,&getItem);
+                if(error!=2)
+                {
+                printPoint(getItem);
+                }
 				break;
 			}
 			case set:
@@ -77,11 +84,12 @@ int main()
 			case returnSize:
 			{
 				darrayItemsNum(darr, &numOfItems);
+                printf("%d\n", numOfItems);
 				break;
 			}
 			case sortArr:
 			{
-				/*darraySort(darr);*/
+				darraySort(darr,compareFunc1);
 				break;
 			}
             default:
@@ -109,12 +117,13 @@ points* createStruct()
     pointptr->y=y;
     return pointptr;
 }
-/*int compareFunc1(void *_elemA, void *_elemB)
+int compareFunc1(void *_elemA, void *_elemB)
 {
-    (points*)_elemA;
-    (points*)_elemB;
-    return _elemA->x + _elemA->y - _elemB->x - _elemB->y;
-}*/
+    points* pointA=(points*)_elemA;
+    points* pointB=(points*)_elemB;
+    int result = pointA->x + pointA->y - pointB->x - pointB->y;
+    return result;
+}
 
 void destroyFunc1(void *_elem, void *context)
 {
@@ -141,13 +150,20 @@ int printMenu()
     int opt;
     printf("1:\tcreate array\n\n");
     printf("2:\tdestroy array\n\n");
-    printf("3:\tadd a number to the end\n\n");
-    printf("4:\tdelete a number from array\n\n");
-    printf("5:\tget a number\n\n");
-    printf("6:\tset a number\n\n");
+    printf("3:\tadd a point to the end\n\n");
+    printf("4:\tdelete a point from array\n\n");
+    printf("5:\tget a point\n\n");
+    printf("6:\tset a point\n\n");
     printf("7:\treturn size of arr\n\n");
     printf("8:\tsort the array\n\n");
     printf("press -1 to stop \n");
     scanf("%d", &opt);
     return opt;
+}
+void printPoint(void *_elem)
+{
+    points * n=(points*)_elem;
+    printf("%d ",n->x);
+    printf("%d\n",n->y);
+    
 }
