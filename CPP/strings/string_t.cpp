@@ -3,25 +3,19 @@
 
 string_t::string_t()
 {
-    string = 0;
-    len = 0;
+    createString(0);
 }
 string_t::~string_t()
 {
     delete[] string;
 }
-
 string_t::string_t(const string_t& str)
 {
-    string=new char[strlen(str.string)+1];
-    strcpy(this->string,str.string);
-    len=str.len;
+    createString(str.string);
 }
 string_t::string_t(const char* str)
 {
-    string=new char[strlen(str)+1];
-    strcpy(this->string,str);
-    len=strlen(str);
+    createString(str);
 }
 int string_t::getLen() const
 {
@@ -33,34 +27,48 @@ const char* string_t::getString() const
 }
 void string_t::setString(const char* str)
 {
-    string=new char[strlen(str)+1];
-    strcpy(string,str);
-    len=strlen(str);
+    createString(str);
 }
 string_t& string_t::operator=(const string_t & str)
 {
     if(this!=&str)
     {
         delete[] string;
-        string=new char[strlen(str.string)+1];
-        strcpy(string,str.string);
-        len=strlen(str.string);
+        createString(str.string);
     }
+    return *this;
 }
 int string_t::compare(const char* str1) const
 {
-    if(string==str1)
+    int c = strcmp(string,str1);
+    if(c==0)
     {
         return 0;
     }
-    if(string>str1)
+    if(c<0)
     {
         return 2;
     }
-    if(str1>string)
+    if(c>0)
     {
         return 1;
     }
+}
+char* string_t::createString(const char* str)
+{
+    if(str==0)
+    {
+        string = new char[256];
+        string[0]='\0';
+    }
+    else
+    {
+        string=new char[strlen(str)+1];
+        strcpy(string,str);
+        len=strlen(str);
+    }
+    return string;
+    
 }
 
 
