@@ -3,167 +3,189 @@
 #include <iostream>
 using namespace std;
 
+static size_t nextPowerOf2(size_t n);
+
+size_t string_t::defCap = 8;
+size_t string_t::countStrings = 0;
+bool string_t::caseSens = true;
+
 string_t::string_t()
 {
     createString(0);
 }
 string_t::~string_t()
 {
-    delete[] string;
+    delete[] this->string;
+    len=0;
 }
-string_t::string_t(const string_t& str)
+string_t::string_t(const string_t &str)
 {
     createString(str.string);
 }
-string_t::string_t(const char* str)
+string_t::string_t(const char *str)
 {
     createString(str);
 }
-int string_t::getLen() const
+/*int string_t::getLen() const
 {
     return len;
-}
-const char* string_t::getString() const
+}*/
+const char *string_t::getString() const
 {
-    return string;
+    return this->string;
 }
-void string_t::setString(const char* str)
+void string_t::setString(const char *str)
 {
     createString(str);
 }
-string_t& string_t::operator=(const string_t & str)
+string_t &string_t::operator=(const string_t &str)
 {
-    if(this!=&str)
+    if (this != &str)
     {
-        delete[] string;
+        delete[] this->string;
+        len=0;
         createString(str.string);
     }
     return *this;
 }
-int string_t::compare(const char* str1) const
+int string_t::compare(const char *str1) const
 {
-    int c = strcmp(string,str1);
-    if(c==0)
+    if (caseSens == true)
     {
-        return 0;
+        int c = strcmp(string, str1);
+        return c == 0 ? 0 : c < 0 ? 1 : 2;
     }
-    if(c<0)
+    if (caseSens == false)
     {
-        return 2;
-    }
-    if(c>0)
-    {
-        return 1;
+        int answer;
+        answer = strcasecmp(string, str1);
+        return answer == 0 ? 0 : answer < 0 ? 1 : 2;
     }
 }
-char* string_t::createString(const char* str)
+char *string_t::createString(const char *str)
 {
-    if(str==0)
+    if (str == 0)
     {
-        string = new char[256];
-        string[0]='\0';
+        capacity = defCap;
+        string = new char[capacity];
+        string[0] = '\0';
     }
     else
     {
-        string=new char[strlen(str)+1];
-        strcpy(string,str);
-        len=strlen(str);
+        if (strlen(str) > capacity)
+        {
+            capacity = nextPowerOf2(strlen(str) + 1);
+            delete[] string;
+            string = new char[capacity];
+        }
+        strcpy(string, str);
+        len = strlen(str);
     }
+    countStrings++;
     return string;
 }
 void string_t::printString()
 {
-    cout<<string<<endl;
+    cout << string << endl;
 }
 void string_t::toUppercase()
 {
     int i;
-    for(i=0;i<this->len;i++)
+    for (i = 0; i < this->len; i++)
     {
-    if(string[i]>='a'&&string[i]<='z')
-        string[i]=string[i]-32;
+        if (string[i] >= 'a' && string[i] <= 'z')
+            string[i] = string[i] - 32;
     }
 }
 void string_t::toLowercase()
 {
     int i;
-    for(i=0;i<this->len;i++)
+    for (i = 0; i < this->len; i++)
     {
-    if(string[i]>='A'&&string[i]<='Z')
-        string[i]=string[i]+32;
+        if (string[i] >= 'A' && string[i] <= 'Z')
+            string[i] = string[i] + 32;
     }
 }
-void string_t::preprend(const char* str)
+void string_t::preprend(const char *str)
 {
-    char* temp=(char*)str;
-    strcat(temp,this->string);
-    strcpy(string,temp);
-    len=strlen(string);
+    if (str != NULL)
+    {
+        char *temp = new char[strlen(str) + this->len + 1];
+        strcpy(temp, str);
+        strcat(temp, this->string);
+        delete[] this->string;
+        this->string = temp;
+        this->len = strlen(this->string);
+    }
 }
-void string_t::preprend(const string_t& str_t)
+void string_t::preprend(const string_t &str_t)
 {
     preprend(str_t.string);
 }
-string_t& string_t::operator+=(const char* str)
+string_t &string_t::operator+=(const char *str)
 {
-    strcat(this->string,str);
-    this->len=strlen(this->string);
+    if (str != NULL)
+    {
+        char *temp = new char[strlen(str) + this->len + 1];
+        strcpy(temp, this->string);
+        strcat(temp, str);
+        delete[] this->string;
+        this->string = temp;
+        this->len = strlen(this->string);
+    }
     return *this;
 }
-string_t& string_t::operator+=(const string_t & str_t)
+string_t &string_t::operator+=(const string_t &str_t)
 {
-    strcat(string,str_t.string);
-    len=strlen(string);
-    return *this;
+    *this += str_t.string;
 }
-bool string_t::operator<(const string_t & str_t)
+bool string_t::operator<(const string_t &str_t) const
 {
-    if(strcmp(this->string,str_t.string)<0)
+    if (strcmp(this->string, str_t.string) < 0)
     {
-    return true;
+        return true;
     }
     return false;
 }
-bool string_t::operator>(const string_t & str_t)
+bool string_t::operator>(const string_t &str_t) const
 {
-    if(strcmp(this->string,str_t.string)>0)
+    if (strcmp(this->string, str_t.string) > 0)
     {
-    return true;
+        return true;
     }
     return false;
 }
-bool string_t::operator==(const string_t & str_t)
+bool string_t::operator==(const string_t &str_t) const
 {
-    if(strcmp(this->string,str_t.string)==0)
-    return true;
+    if (strcmp(this->string, str_t.string) == 0)
+        return true;
     return false;
 }
-bool string_t::operator!=(const string_t & str_t)
+bool string_t::operator!=(const string_t &str_t) const
 {
-    if(strcmp(this->string,str_t.string)!=0)
-    return true; 
+    if (strcmp(this->string, str_t.string) != 0)
+        return true;
     return false;
 }
-bool string_t::operator<=(const string_t & str_t)
+bool string_t::operator<=(const string_t &str_t) const
 {
-    if(strcmp(this->string,str_t.string)<=0)
+    if (strcmp(this->string, str_t.string) <= 0)
     {
-    return true;
-    }
-    return false;
-
-}
-bool string_t::operator>=(const string_t & str_t)
-{
-    if(strcmp(this->string,str_t.string)>=0)
-    {
-    return true;
+        return true;
     }
     return false;
 }
-bool string_t::contains(const char* str)
+bool string_t::operator>=(const string_t &str_t) const
 {
-    if(strstr(string,str)!=NULL)
+    if (strcmp(this->string, str_t.string) >= 0)
+    {
+        return true;
+    }
+    return false;
+}
+bool string_t::contains(const char *str) const
+{
+    if (strstr(string, str) != NULL)
     {
         return true;
     }
@@ -171,39 +193,136 @@ bool string_t::contains(const char* str)
 }
 char string_t::operator[](size_t index) const
 {
-    if(index<=this->len)
+    if (index <= this->len)
     {
-    return this->string[index];
+        return this->string[index];
     }
     else
     {
-        cout<<"out on bound \n";
+        cout << "out on bound \n";
+        return this->string[len];
     }
 }
-char& string_t::operator[](size_t index)
+char &string_t::operator[](size_t index)
 {
-    if(index>this->len)
+    if (index > this->len)
     {
-        cout<<"out on bound \n";
-        return NULL;
+        cout << "out on bound \n";
+        return this->string[len];
     }
     return this->string[index];
 }
-ostream& operator<<(ostream& os,const string_t& str_t)
+ostream &operator<<(ostream &os, const string_t &str_t)
 {
-    os<< "string: " << str_t.getString()<<endl
-    << "length: " << str_t.getLen()<<endl;
+    os << "string: " << str_t.getString() << endl
+       << "length: " << str_t.getLen() << endl;
     return os;
 }
-istream& operator>>(istream& is, string_t& str_t)
+istream &operator>>(istream &is, string_t &str_t)
 {
     char str[64];
     is >> str;
     str_t.setString(str);
     return is;
+}
+size_t string_t::getCapacity() const
+{
+    return capacity;
+}
+size_t string_t::setDefCapacity(size_t newCapacity)
+{
+    newCapacity = nextPowerOf2(newCapacity);
+    size_t oldCapacity = defCap;
+    defCap = newCapacity;
+    return oldCapacity;
+}
+//size_t string_t::getDefCapacity() const { return defCap; }
 
-
+bool string_t::setCaseSens(bool flag)
+{
+    bool temp = caseSens;
+    caseSens = flag;
+    return temp;
+}
+bool string_t::getcaseSensMode()
+{
+    return caseSens;
+}
+int string_t::firstChar(const char c) const
+{
+    int i;
+    bool flag = false;
+    for (i = 0; i <= len; i++)
+    {
+        if (string[i] == c)
+        {
+            flag = true;
+            break;
+        }
+    }
+    if (flag == true)
+    {
+        return i + 1;
+    }
+    else
+    {
+        cout << "\n Sorry!! We haven't found the Search Character " << c;
+        return len;
+    }
 }
 
+int string_t::lastChar(const char c) const
+{
+    int i;
+    bool flag = false;
+    for (i = len; i >= 0; i--)
+    {
+        if (string[i] == c)
+        {
+            flag = true;
+            break;
+        }
+    }
+    if (flag == true)
+    {
+        return i + 1;
+    }
+    else
+    {
+        cout << "\n Sorry!! We haven't found the Search Character " << c;
+        return len;
+    }
+}
 
+string_t string_t::operator()(int n1, int n2) const
+{
+    int i;
+    char *newStr = new char[n2 + 1];
+    if (n1 > len || n1 < 0 || n1 + n2 + 1 > len)
+    {
+        return "";
+    }
+    //strncpy(newStr,&string[n1],n2);
+    for (i = 0; i < n2; i++)
+    {
+        newStr[i] = string[(n1 - 1) + i];
+    }
+    return newStr;
+}
+size_t string_t::getCount()
+{
+    return countStrings;
+}
 
+size_t string_t::nextPowerOf2(size_t n)
+{
+    size_t count = 0;
+    if (n && !(n & (n - 1)))
+        return n;
+    while (n != 0)
+    {
+        n >>= 1;
+        count += 1;
+    }
+    return 1 << count;
+}
