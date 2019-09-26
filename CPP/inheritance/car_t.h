@@ -11,8 +11,8 @@ public:
     
     car_t(); //default CTOR
     car_t(const size_t);  //CTOR with capacity
-    car_t(const car_t &); //copy CTOR
-    car_t &operator=(const car_t &car);
+
+    
 
 
     string setCarName(const string);
@@ -25,6 +25,8 @@ public:
     bool operator==(const car_t &car);
 
 protected:
+    car_t &operator=(const car_t &car);
+    car_t(const car_t &); //copy CTOR
     ~car_t(); //DTOR
     size_t capacity;
     string car_name;
