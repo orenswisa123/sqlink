@@ -11,20 +11,21 @@ bool string_t::caseSens = true;
 
 string_t::string_t()
 {
-    createString(0);
+    string=createString(0);
 }
 string_t::~string_t()
 {
-    delete[] this->string;
+    delete[] string;
     len=0;
 }
 string_t::string_t(const string_t &str)
 {
-    createString(str.string);
+    string=createString(str.string);
 }
 string_t::string_t(const char *str)
 {
-    createString(str);
+    createString(0);
+    string=createString(str);
 }
 /*int string_t::getLen() const
 {
@@ -36,7 +37,8 @@ const char *string_t::getString() const
 }
 void string_t::setString(const char *str)
 {
-    createString(str);
+    delete[] string;
+    string=createString(str);
 }
 string_t &string_t::operator=(const string_t &str)
 {
@@ -75,7 +77,6 @@ char *string_t::createString(const char *str)
         if (strlen(str) > capacity)
         {
             capacity = nextPowerOf2(strlen(str) + 1);
-            delete[] string;
             string = new char[capacity];
         }
         strcpy(string, str);
@@ -294,20 +295,17 @@ int string_t::lastChar(const char c) const
     }
 }
 
-string_t string_t::operator()(int n1, int n2) const
+string_t string_t::operator()(size_t n1, size_t n2) const
 {
-    int i;
-    char *newStr = new char[n2 + 1];
-    if (n1 > len || n1 < 0 || n1 + n2 + 1 > len)
+    string_t s;
+    if(n1 < this->len)
     {
-        return "";
+        char* tmp = new char[this->len];
+        strncpy(tmp, this->string + n1, n2);
+        s.setString(tmp);
+        delete[] tmp;
     }
-    //strncpy(newStr,&string[n1],n2);
-    for (i = 0; i < n2; i++)
-    {
-        newStr[i] = string[(n1 - 1) + i];
-    }
-    return newStr;
+    return s;
 }
 size_t string_t::getCount()
 {

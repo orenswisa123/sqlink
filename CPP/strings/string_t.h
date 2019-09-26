@@ -6,8 +6,8 @@ class string_t
 public:
     ~string_t(); //DTOR
     string_t(); //default COTR
-    string_t(const string_t& str); //COTR
-    string_t(const char*); //copy COTR
+    string_t(const string_t& str); //copy COTR
+    string_t(const char*); // COTR
     string_t& operator=(const string_t & str); 
 
     inline int getLen() const; //get length
@@ -40,7 +40,7 @@ public:
     static bool getcaseSensMode();
     int firstChar(const char c) const;
     int lastChar(const char c) const;
-    string_t operator()(int n1,int n2)const;
+    string_t operator()(size_t n1,size_t n2)const;
     static size_t getCount(); 
 
 

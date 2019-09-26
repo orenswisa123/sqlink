@@ -8,10 +8,10 @@ int stringOren2();
 
 int main()
 {
-    stringOren();
+   //stringOren();
     stringOren2();
 }
-int stringOren()
+/*int stringOren()
 {
     string_t str1;
     string_t str2;
@@ -127,7 +127,7 @@ int stringOren()
         }
     }
     return 0;
-}
+}*/
 int stringOren2()
 {
     string_t str1;
@@ -163,19 +163,25 @@ int stringOren2()
 
         switch (choice)
         {
-
         case 1:
-            cout << "set string: \n";
+        {
+           /* cout << "set string: \n";
             cin >> str_temp;
-            str1=str_temp;
+            str1=str_temp;*/
+            string_t str3("oren");
+            str3.printString();
             break;
+        }
         case 2:
+        {
             str1.printString();
             break;
+        }
         case 3:
             cout << string_t::getcaseSensMode() << endl;
             break;
         case 4:
+        {
             cout << "enter case sens mode" << endl;
             cin >> caseSens;
             if(caseSens!=0)
@@ -185,6 +191,7 @@ int stringOren2()
             else if(caseSens==0)
                 caseSensBool=false;
             string_t::setCaseSens(caseSensBool);
+        }
             break;
         case 5:
             cout << "insert another string to check" << endl;
