@@ -18,10 +18,12 @@ public:
     virtual size_t write(const void *, size_t, size_t position);
     virtual size_t read(void *, size_t); //return num of success bytes read
     virtual size_t read(void *, size_t, size_t position);
-    static void getDefCapacity() { return defCapacity; }
-    static size_t setDefCapacity(size_t cap) { defCapacity = cap; }
+    static void getDefCapacity();
+    static size_t setDefCapacity(size_t cap);
 
 private:
+    size_t capacity;
+    static size_t defCapacity;
     memPage_t(const memPage_t &mp) {}
     memPage_t &operator=(const memPage_t &mp) {}
     char *buffer;

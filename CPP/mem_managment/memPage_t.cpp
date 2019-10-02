@@ -1,36 +1,60 @@
 #include "memPage_t.h"
 #include <string>
+#include <stdlib.h>
+size_t memPage_t::defCapacity = 6;
 
-bool memPage_t::isMemEmpty()
+memPage_t::memPage_t()
+{
+	capacity = defCapacity;
+	buffer = new char[capacity];
+}
+memPage_t::memPage_t(size_t capa)
+{
+	capacity = capa;
+	buffer = new char[capacity];
+}
+
+memPage_t::~memPage_t()
+{
+	delete[] buffer;
+}
+bool memPage_t::isMemEmpty()const
 {
 	if (m_actualSize == 0)
 		return true;
 	else
 		return false;
 }
-bool memPage_t::isMemFull()
+bool memPage_t::isMemFull()const
 {
 	return m_actualSize == capacity ? true : false;
 }
-char *memPage_t::read(void *output, size_t bytes)
+void memPage_t::getDefCapacity() { return defCapacity; }
+size_t memPage_t::setDefCapacity(size_t cap) { defCapacity = cap; }
+size_t memPage_t::read(void *output, size_t bytes)
 {
+	/*read(output,bytes,m_currentPosition);*/
+	size_t numOfBytes;
 	if (output != 0)
 	{
-		if (m_currentPosition + bytes > m_actualSize)
+		if (getCurrentPosition() + bytes > getactualSize())
 		{
-			memcpy(output, (void *)(&(buffer[m_currentPosition])), m_actualSize - m_currentPosition);
+			numOfBytes = m_actualSize - m_currentPosition;
+			memcpy(output, (void *)(&(buffer[m_currentPosition])), numOfBytes);
 			m_currentPosition = m_actualSize;
 		}
 		else
 		{
+			numOfBytes = bytes;
 			memcpy(output, (void *)(&(buffer[m_currentPosition])), bytes);
 			m_currentPosition += bytes;
 		}
 	}
-	return (char *)output;
+	return numOfBytes;
 }
-char *memPage_t::read(void *output, const size_t pos, size_t bytes)
+size_t memPage_t::read(void *output, size_t bytes, size_t pos)
 {
+	size_t numOfBytes;
 	if (output != 0 && pos <= m_actualSize)
 	{
 		m_currentPosition = pos;
@@ -38,18 +62,20 @@ char *memPage_t::read(void *output, const size_t pos, size_t bytes)
 		{
 			memcpy(output, (void *)(&(buffer[m_currentPosition])), m_actualSize - m_currentPosition);
 			m_currentPosition = m_actualSize;
+			numOfBytes = m_actualSize - m_currentPosition
 		}
 		else
 		{
 			memcpy(output, (void *)(&(buffer[m_currentPosition])), bytes);
 			m_currentPosition += bytes;
+			numOfBytes = bytes;
 		}
 	}
-	return (char *)output;
+	return numOfBytes;
 }
-size_t memPage_t::write(const char *inputBuffer, size_t bufferSize)
+size_t memPage_t::write(const void *inputBuffer, size_t bufferSize)
 {
-	int numOfBytes;
+	size_t numOfBytes;
 	if (m_currentPosition + bufferSize > capacity)
 	{
 		memcpy((void *)(&(buffer[m_currentPosition])), (void *)inputBuffer, capacity - m_currentPosition);
@@ -69,13 +95,13 @@ size_t memPage_t::write(const char *inputBuffer, size_t bufferSize)
 	}
 	return numOfBytes;
 }
-size_t memPage_t::write(const char *inputBuffer, size_t bufferSize, size_t pos)
+size_t memPage_t::write(const void *inputBuffer, size_t bufferSize, size_t pos)
 {
 	if (pos > m_actualSize)
 	{
 		return 0;
 	}
-	int numOfBytes;
+	size_t numOfBytes;
 	m_currentPosition = pos;
 	if (m_currentPosition + bufferSize > capacity)
 	{
