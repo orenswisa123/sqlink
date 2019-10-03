@@ -18,7 +18,7 @@ public:
     virtual size_t write(const void *, size_t, size_t position);
     virtual size_t read(void *, size_t); //return num of success bytes read
     virtual size_t read(void *, size_t, size_t position);
-    static void getDefCapacity();
+    static size_t getDefCapacity();
     static size_t setDefCapacity(size_t cap);
 
 private:

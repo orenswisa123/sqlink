@@ -1,11 +1,12 @@
 #include "memPool_t.h"
 #include <iostream>
 #include <string>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <vector>
 
-bool memPool_t::isMemEmpty()
+bool memPool_t::isMemEmpty()const
 {
-    if (v.size() == 0 || v.size() == 1 && v[0].m_actualSize == 0)
+    if (v.size() == 0 || v.size() == 1 && v[0]->getactualSize() == 0)
         return true;
     else
         return false;
@@ -42,7 +43,7 @@ size_t memPool_t::write(const void *inputBuffer, size_t bufferSize)
     {
         this->setactualSize(v[0]->getactualSize());
     }
-    this->getCurrentPosition(--i);
+    this->setCurrentPosition(--i);
     return s;
 }
 size_t memPool_t::write(const void *inputBuffer, size_t bufferSize, size_t pos)
@@ -61,7 +62,7 @@ size_t memPool_t::write(const void *inputBuffer, size_t bufferSize, size_t pos)
             memPage_t *page = new memPage_t;
             v.insert(v.end(), page);
         }
-        if (v[i]->getCurrent() == 0)
+        if (v[i]->getCurrentPosition() == 0)
         {
             s += v[i]->write(temp + s, bufferSize - s, 0);
         }
@@ -81,7 +82,4 @@ size_t memPool_t::write(const void *inputBuffer, size_t bufferSize, size_t pos)
     }
     this->setCurrentPosition(--i);
     return s;
-    ​
 }
-
-​

@@ -27,7 +27,7 @@ public:
     virtual size_t read(void *, size_t, size_t position);
 
 private:
-    vector<Page_t *> v;
+    vector<memPage_t *> v;
     memPool_t(const memPool_t &mp) {}
     memPool_t &operator=(const memPool_t &mp);
     
