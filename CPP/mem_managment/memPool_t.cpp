@@ -4,82 +4,93 @@
 #include <stdlib.h>
 #include <vector>
 
-bool memPool_t::isMemEmpty()const
+bool memPool_t::isMemEmpty() const
 {
     if (v.size() == 0 || v.size() == 1 && v[0]->getactualSize() == 0)
         return true;
     else
         return false;
 }
-size_t memPool_t::write(const void *inputBuffer, size_t bufferSize)
+size_t memPool_t::read(void *buffer, size_t size)
 {
-    size_t s = 0;
-    char *temp = (char *)inputBuffer;
-    int i = this->getCurrentPosition();
-    while (s != bufferSize)
-    {
-        if (i > this->v.size() - 1)
-        {
-            memPage_t *page = new memPage_t;
-            v.insert(v.end(), page);
-        }
-        if (v[i]->getCurrentPosition() == 0)
-        {
-
-            s += v[i]->write(temp + s, bufferSize - s, 0);
-        }
-        else
-        {
-            cout << "test test" << v[i]->getCurrentPosition() << endl;
-            s += v[i]->write(temp + s, bufferSize - s, v[i]->getCurrentPosition() + 1);
-        }
-        i++;
-    }
-    if (v.size() != 1)
-    {
-        this->setactualSize((v.size() - 1) * v[0]->getCapacity() + v[v.size() - 1]->getactualSize());
-    }
-    else
-    {
-        this->setactualSize(v[0]->getactualSize());
-    }
-    this->setCurrentPosition(--i);
-    return s;
+    return read(buffer, size, m_currentPosition);
 }
-size_t memPool_t::write(const void *inputBuffer, size_t bufferSize, size_t pos)
+
+size_t memPool_t::read(void *buffer, size_t size, size_t pos)
 {
-    if (pos > this->v.size() - 1)
+    if (buffer == 0 || size == 0)
     {
         return 0;
     }
-    size_t s = 0;
-    char *temp = (char *)inputBuffer;
-    int i = pos;
-    while (s != bufferSize)
+
+    setCurrentPosition(pos);
+    size_t pageIndex = m_currentPosition / pageSize;
+    size_t tempSize, readCount, buffPos = 0;
+
+    if (size > (m_actualSize - m_currentPosition))
     {
-        if (i > this->v.size() - 1)
+        size = m_actualSize - m_currentPosition;
+    }
+    tempSize = size;
+
+    while (true)
+    {
+        v[pageIndex]->setCurrentPosition(m_currentPosition % pageSize);
+        readCount = v[pageIndex]->read((char *)buffer + buffPos, tempSize);
+        setCurrentPosition(m_currentPosition + readCount);
+
+        if (readCount != tempSize)
         {
-            memPage_t *page = new memPage_t;
-            v.insert(v.end(), page);
-        }
-        if (v[i]->getCurrentPosition() == 0)
-        {
-            s += v[i]->write(temp + s, bufferSize - s, 0);
+            tempSize -= readCount;
+            buffPos += readCount;
+            pageIndex++;
         }
         else
         {
-            s += v[i]->write(temp + s, bufferSize - s, v[i]->getCurrentPosition() + 1);
+            break;
         }
-        i++;
     }
-    if (v.size() != 1)
+
+    return size;
+}
+
+size_t memPool_t::write(const void *buffer, size_t size)
+{
+    return write(buffer, size, m_currentPosition);
+}
+
+size_t memPool_t::write(const void *buffer, size_t size, size_t pos)
+{
+    if (buffer == 0 || size == 0)
     {
-        this->setactualSize((v.size() - 1) * v[0]->getCapacity() + v[v.size() - 1]->getactualSize());
+        return 0;
     }
-    else
+
+    setCurrentPosition(pos);
+    size_t pageIndex = m_currentPosition / pageSize;
+    size_t writeCount, buffPos = 0, tempSize = size;
+
+    while (true)
     {
-        this->setactualSize(v[0]->getactualSize());
+        v[pageIndex]->setCurrentPosition(m_currentPosition % pageSize);
+        writeCount = v[pageIndex]->write((char *)buffer + buffPos, tempSize);
+        setactualSize(writeCount);
+        setCurrentPosition(m_currentPosition + writeCount);
+
+        if (writeCount != tempSize)
+        {
+            memPage_t *pg = new memPage_t(pageSize);
+            v.push_back(pg);
+
+            tempSize -= writeCount;
+            buffPos += writeCount;
+            pageIndex++;
+        }
+        else
+        {
+            break;
+        }
     }
-    this->setCurrentPosition(--i);
-    return s;
+
+    return size;
 }

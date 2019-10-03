@@ -17,3 +17,7 @@ void memManager_t::setCurrentPosition(size_t newCur)
         m_currentPosition = newCur;
     }
 }
+void memManager_t::setactualSize(size_t newSize)
+{
+    m_actualSize=newSize;
+}

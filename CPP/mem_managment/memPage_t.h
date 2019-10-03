@@ -8,18 +8,18 @@ class memPage_t : public memManager_t
 {
 public:
     memPage_t();
-    ~memPage_t();
+    virtual ~memPage_t();
     memPage_t(size_t capa);
 
     size_t getCapacity() const { return capacity; }
     virtual bool isMemEmpty() const;
     virtual bool isMemFull() const;
     virtual size_t write(const void *, size_t); //we get number of bytes
-    virtual size_t write(const void *, size_t, size_t position);
+    virtual size_t write(const void *, size_t, size_t);
     virtual size_t read(void *, size_t); //return num of success bytes read
-    virtual size_t read(void *, size_t, size_t position);
-    static size_t getDefCapacity();
-    static size_t setDefCapacity(size_t cap);
+    virtual size_t read(void *, size_t, size_t);
+   /* static size_t getDefCapacity();
+    static void setDefCapacity(size_t cap);*/
 
 private:
     size_t capacity;

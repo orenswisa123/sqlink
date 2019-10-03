@@ -1,7 +1,7 @@
 #include "memPage_t.h"
 #include <string>
 #include <stdlib.h>
-#include<cstring>
+#include <cstring>
 size_t memPage_t::defCapacity = 6;
 
 memPage_t::memPage_t()
@@ -19,19 +19,17 @@ memPage_t::~memPage_t()
 {
 	delete[] buffer;
 }
-bool memPage_t::isMemEmpty()const
+bool memPage_t::isMemEmpty() const
 {
 	if (m_actualSize == 0)
 		return true;
 	else
 		return false;
 }
-bool memPage_t::isMemFull()const
+bool memPage_t::isMemFull() const
 {
 	return m_actualSize == capacity ? true : false;
 }
-size_t memPage_t::getDefCapacity() { return defCapacity; }
-size_t memPage_t::setDefCapacity(size_t cap) { defCapacity = cap; }
 size_t memPage_t::read(void *output, size_t bytes)
 {
 	/*read(output,bytes,m_currentPosition);*/
