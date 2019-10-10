@@ -32,10 +32,11 @@ private:
     c_it const_it;
 }
 
+template <class T>
 class isExist{
    public:
-   isExist(T t):val(t){}
-   bool operator()(T* parm)const{return *parm==t;} 
+   isExist(const T& t):val(t){}
+   bool operator()(const T* parm)const{return *parm==t;} 
    private:
    T val;
 }
