@@ -23,7 +23,8 @@ int main()
         cout << " Press 2 - To delete meeting.\n";
         cout << " Press 3 - To find meeting.\n";
         cout << " Press 4 - To clean calendar.\n";
-        cout << " Press 5 - To exit.\n";
+        cout << " Press 5 - To print.\n";
+        cout << " Press 6 - To exit.\n";
         cout << " Enter your choice and press return: ";
 
         cin >> choice;
@@ -86,8 +87,11 @@ int main()
         case 4:
             cal.cleanCalender();
             break;
-
         case 5:
+            cal.printCalender();
+            break;
+
+        case 6:
             cout << "End of Program." << endl;
             choice = -1;
             break;
@@ -95,7 +99,6 @@ int main()
         default:
             cout << "Not a Valid Choice." << endl;
             cout << "Choose again." << endl;
-            cin >> choice;
             break;
         }
     }

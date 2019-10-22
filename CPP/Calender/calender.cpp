@@ -71,15 +71,15 @@ bool Calender_t::deleteMeeting(float startMeet)
 Meeting_t *Calender_t::findMeeting(float start_hour)
 {
     iter it;
-    try
+    if (start_hour != 0)
     {
         it = CalenderCont.find(start_hour);
+        if(it!=CalenderCont.end())
+        {
         return it->second;
+        }
     }
-    catch (...)
-    {
-        return NULL;
-    }
+    return NULL;
 }
 void Calender_t::cleanCalender()
 {

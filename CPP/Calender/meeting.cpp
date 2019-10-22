@@ -21,7 +21,7 @@ Meeting_t::Meeting_t(float start, float end, string msg)
 }
 void Meeting_t::printMeet()const
 {
-    cout<<m_start;
-    cout<<m_end;
-    cout<<m_message;
+    cout<<m_start<<" ";
+    cout<<m_end<<" ";
+    cout<<m_message<<endl;
 }
