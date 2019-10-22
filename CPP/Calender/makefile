@@ -13,7 +13,7 @@ INCLUDES =
 LIBS =
 
 # define the C source files
-SRCS = calender.cpp meeting.cpp
+SRCS = calender.cpp meeting.cpp calendertest.cpp
 
 # define the C object files 
 #

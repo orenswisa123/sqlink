@@ -1,6 +1,19 @@
 #include "calender.h"
 #include <map>
 
+/*Calender_t::~Calender_t()
+{
+    iter it;
+    Meeting_t *meet;
+    it = CalenderCont.begin();
+    while (it != CalenderCont.end())
+    {
+        meet = it->second;
+        CalenderCont.erase(it);
+        it++;
+        delete meet;
+    }
+}*/
 bool Calender_t::insertMeeting(Meeting_t *meet)
 {
     iter it;
@@ -71,4 +84,13 @@ Meeting_t *Calender_t::findMeeting(float start_hour)
 void Calender_t::cleanCalender()
 {
     CalenderCont.clear();
+}
+void Calender_t::printCalender()
+{
+    iter it = CalenderCont.begin();
+    while (it != CalenderCont.end())
+    {
+        it->second->printMeet();
+        it++;
+    }
 }

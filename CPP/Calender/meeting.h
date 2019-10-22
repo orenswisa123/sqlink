@@ -1,3 +1,5 @@
+#ifndef MEETING_H
+#define MEETING_H
 #include <iostream>
 #include <string>
 using namespace std;
@@ -10,6 +12,7 @@ public:
     float getStart() const { return m_start; }
     float getEnd() const { return m_end; }
     string getMeetSubject() const { return m_message; }
+    void printMeet()const;
 
 private:
     Meeting_t(const Meeting_t &t) {}
@@ -18,3 +21,5 @@ private:
     float m_end;
     string m_message;
 };
+
+#endif // !MEETING_H
