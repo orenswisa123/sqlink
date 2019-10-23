@@ -52,16 +52,17 @@ public:
     virtual binIO_t &operator>>(unsigned long &num);
 
 private:
+    bool flag;
+    void* m_buf;
+
     binIO_t(const binIO_t &t);            //copy CTOR
     binIO_t &operator=(const binIO_t &t); //operator =
-    
+
     template <class T>
     binIO_t &get(T &t);
 
     template <class T>
     binIO_t &put(const T &t);
-
-    
 };
 
 template <class T>

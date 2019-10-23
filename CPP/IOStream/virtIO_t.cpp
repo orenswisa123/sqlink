@@ -16,6 +16,13 @@ virtIO_t::virtIO_t(string newName, string newMode)
     m_status = ok_e;
     m_pos = 0;
 }
+void virtIO_t::Print()const
+{
+    cout<<"Status:"<<m_status<<endl;
+    cout<<"File name:" <<m_name<<endl;
+    cout<<"Mode:"<<m_mode<<endl;
+}
+
 void virtIO_t::Fopen()
 {
     m_fp = fopen(m_name.c_str(), m_mode.c_str());

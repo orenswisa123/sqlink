@@ -2,10 +2,29 @@
 
 binIO_t &binIO_t::operator>>(void *Buf)
 {
-    m_shift=Buf;
+    flag = true; //read from file
+    m_buf=Buf;
+    return *this;
 }
-binIO_t &operator<<(const void *Buf);
-void operator,(int lenght);
+binIO_t &binIO_t::operator<<(const void *Buf)
+{
+    flag = false; //write to file
+    m_buf=(void*)Buf;
+    return *this;
+}
+void binIO_t::operator,(int lenght) 
+{
+    if (flag == false)
+    {
+        fwrite(m_buf ,lenght,1, m_fp);
+    }
+    else
+    {
+        fread(m_buf,lenght,1,m_fp);
+    }
+    
+    
+}
 
 binIO_t &binIO_t::operator<<(int num) { return put(num); }
 binIO_t &binIO_t::operator>>(int &num) { return get(num); }

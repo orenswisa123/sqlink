@@ -16,14 +16,19 @@ public:
         writeErr_e,
         readErr_e
     } status;
+    
+    virtual ~virtIO_t() { Fclose(); }
     virtIO_t();
     virtIO_t(string, string);
-    virtual ~virtIO_t() { Fclose(); }
+    
     void Fclose()
     {
         if (m_fp != NULL)
+        {
             fclose(m_fp);
+        }  
     }
+    void Print()const;
     void Fopen();
     virtual void setMode(string newMode) { m_mode = newMode; }
     size_t getfileLen() const;
