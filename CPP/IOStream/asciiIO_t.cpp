@@ -1,42 +1,31 @@
 #include "asciiIO_t.h"
+asciiIO_t &asciiIO_t::operator<<(int num) { return Write(num, "%d"); }
+asciiIO_t &asciiIO_t::operator>>(int &num) { return Read(num, "%d"); }
 
-asciiIO_t &asciiIO_t::operator<<(int num)
-{
-    if (m_mode != 'w' || m_mode != 'w+' || m_mode != 'r+')
-    {
-        m_status = bad_access_e;
-    }
-    else if (m_status == ok_e)
-    {
-        int i;
-        i = fprintf(this->m_fp, "%d", num);
-        if (i < 0)
-        {
-            m_status = writeErr_e;
-            throw m_status;
-        }
-    }
-    else
-    {
-        throw m_status;
-    }
-}
-asciiIO_t &asciiIO_t::operator>>(int &num)
-{
-    if (m_mode == 'rb' || m_mode == 'wb')
-    {
-        m_status = bad_access_e;
-    }
-    else if (m_mode == 'w')
-    {
-        m_status = readErr_e;
-    }
-    if (m_status == ok_e)
-    {
-        fscanf(this->m_fp, num);
-    }
-    else
-    {
-        throw m_status;
-    }
-}
+asciiIO_t &asciiIO_t::operator<<(char c) { return Write(c, "%c"); }
+asciiIO_t &asciiIO_t::operator>>(char &c) { return Read(c, "%c"); }
+
+asciiIO_t &asciiIO_t::operator<<(unsigned char uc) { return Write(uc, "%c"); }
+asciiIO_t &asciiIO_t::operator>>(unsigned char &uc) { return Read(uc, "%c"); }
+
+asciiIO_t &asciiIO_t::operator<<(short s) { return Write(s, "%hd"); }
+asciiIO_t &asciiIO_t::operator>>(short &s) { return Read(s, "%hd"); }
+
+asciiIO_t &asciiIO_t::operator<<(float f) { return Write(f, "%f"); }
+asciiIO_t &asciiIO_t::operator>>(float &f) { return Read(f, "%f"); }
+
+asciiIO_t &asciiIO_t::operator<<(unsigned short us) { return Write(us, "%hu"); }
+asciiIO_t &asciiIO_t::operator>>(unsigned short &us) { return Read(us, "%hu"); }
+
+asciiIO_t &asciiIO_t::operator<<(unsigned int num) { return Write(num, "%u"); }
+asciiIO_t &asciiIO_t::operator>>(unsigned int &num) { return Read(num, "%u"); }
+
+asciiIO_t &asciiIO_t::operator<<(long int num) { return Write(num, "%ld"); }
+asciiIO_t &asciiIO_t::operator>>(long int &num) { return Read(num, "%ld"); }
+
+asciiIO_t &asciiIO_t::operator<<(unsigned long int num) { return Write(num, "%lu"); }
+asciiIO_t &asciiIO_t::operator>>(unsigned long int &num) { return Read(num, "%lu"); }
+
+asciiIO_t &asciiIO_t::operator<<(double num) { return Write(num, "%lf"); }
+asciiIO_t &asciiIO_t::operator>>(double &num) { return Read(num, "%lf"); }
+
