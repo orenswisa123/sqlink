@@ -1,86 +1,244 @@
 #include "asciiIO_t.h"
 #include "binIO_t.h"
 
-// int main()
-// {
-//     // try
-//     // {
-//     //     binIO_t t1("Marianna.txt","w");
-//     //     t1.Fopen();
-//     //     t1<<"oren",3;//write to file bin
-//     // }
-//     // catch(string e)
-//     // {
-//     //     cout<<e<<endl;
-//     // }
-//     // return 0;
-// }
-
-using namespace std;
-void testStream(virtIO_t* virtStream, int virtType);
-
-int main()
+template <class T>
+void writeTest(virtIO_t *vir)
 {
-    size_t optionBinAscii = 1;
-
-    virtIO_t *virtS=0;
-
-    while (optionBinAscii)
-    {
-
-        cout << "1 - ASCII" << endl;
-        cout << "2 - BINARY" << endl;
-
-        cin >> optionBinAscii;
-        switch (optionBinAscii)
-        {
-        case 1:
-        {
-            testStream(virtS, 1);
-            break;
-        }
-
-        case 2:
-        {
-            testStream(virtS, 2);
-            break;
-        }
-        default:
-            break;
-        }
-    }
-    return 0;
+	T i;
+	char c = ' ';
+	cin >> i;
+	(*vir) << i << c;
 }
 
-void testStream(virtIO_t* virtStream, int virtType)
+template <class T>
+void readTest(virtIO_t *vir)
 {
-    string name;
-    string mode;
+	T i;
+	(*vir) >> i;
+	cout << "The data: " << i << " ";
+}
 
-    cout << "Enter name of file" << endl;
-    cin >> name;
-    cout << "Enter mode r||r+||w||w+" << endl;
-    cin >> mode;
+void vpTestWrite(virtIO_t *vir)
+{
+	
+}
 
-    if (virtType == 1)
-    {
-        virtStream = new asciiIO_t(name, mode);
-    }
-    else
-    {
-        virtStream = new binIO_t(name, mode);
-    }
+void vpTestRead(virtIO_t *vir)
+{
+	
+}
 
-    virtStream->Fopen();
+void readToFile(virtIO_t *vir)
+{
+	char c;
+	int i = 1;
+	while (i)
+	{
+		cout << endl
+			 << "i - int | l - long | f - float | c - char | d - double | v - void* | e - exit " << endl;
+		cin >> c;
+		switch (c)
+		{
+		case 'i':
+		{
+			readTest<int>(vir);
+			break;
+		}
+		case 'l':
+		{
+			readTest<long>(vir);
+			break;
+		}
+		case 'f':
+		{
+			readTest<float>(vir);
+			break;
+		}
+		case 'c':
+		{
+			readTest<char>(vir);
+			break;
+		}
+		case 'd':
+		{
+			readTest<double>(vir);
+			break;
+		}
+		case 'v':
+		{
+			//vpTestRead(vir);
+			break;
+		}
+		case 'e':
+		{
+			i = 0;
+			break;
+		}
+		default:
+			break;
+		}
+	}
+}
 
-    while (i)
-    {
-        //__write <<
-        //read >>
+void writeToFile(virtIO_t *vir)
+{
+	char c;
+	int i = 1;
+	while (i)
+	{
+		cout << endl
+			 << "i - int | l - long | f - float | c - char | d - double | v - void*  | e - exit" << endl;
+		cin >> c;
+		switch (c)
+		{
+		case 'i':
+		{
+			writeTest<int>(vir);
+			break;
+		}
+		case 'l':
+		{
+			writeTest<long>(vir);
+			break;
+		}
+		case 'f':
+		{
+			writeTest<float>(vir);
+			break;
+		}
+		case 'c':
+		{
+			writeTest<char>(vir);
+			break;
+		}
+		case 'd':
+		{
+			writeTest<double>(vir);
+			break;
+		}
+		case 'v':
+		{
+			//vpTestWrite(vir);
+			break;
+		}
+		case 'e':
+		{
+			i = 0;
+			break;
+		}
+		default:
+			break;
+		}
+	}
+}
 
-        //getlen
-        //getpos
-        //
-    }
-    
+void fileTest(virtIO_t *vir)
+{
+	string name;
+	string mode;
+	cout << "enter file name" << endl;
+	cin >> name;
+	cout << "enter mode " << endl;
+	cin >> mode;
+	try
+	{
+		vir->Fopen(name.c_str(), mode.c_str());
+	}
+	catch (string e)
+	{
+		cout << e << endl;
+		vir->Fclose();
+		return;
+	}
+
+	// if (vir->getStatus() != virtIO_t::ok_e)
+	// {
+	// 	cout << "ERROR - wrong input" << endl;
+	// }
+
+	char c;
+	while (1)
+	{
+		cout << endl
+			 << "r - read | w - write |  p - get position | s - set position | l - get length | e - exit " << endl;
+		cin >> c;
+		bool boo = 0;
+		try
+		{
+			switch (c)
+			{
+			case 'r':
+			{
+				readToFile(vir);
+
+				break;
+			}
+			case 'w':
+			{
+
+				writeToFile(vir);
+
+				break;
+			}
+			case 'p':
+			{
+				cout << "The position: " << vir->getPosition() << endl;
+				break;
+			}
+			case 's':
+			{
+				size_t s;
+				cin >> s;
+				vir->setPosition(s);
+				break;
+			}
+			case 'l':
+			{
+				cout << "The lenght: " << vir->getfileLen() << endl;
+				break;
+			}
+			case 'e':
+			{
+				boo = 1;
+				break;
+			}
+			default:
+				break;
+			}
+			if (boo)
+			{
+				break;
+			}
+		}
+		catch (string ex)
+		{
+			cout << ex << endl;
+		}
+	}
+	vir->Fclose();
+}
+int main()
+{
+	int i = 1;
+	while (i)
+	{
+		cout << "choose a - ascii | b - binary | e - exit " << endl;
+		char c;
+		cin >> c;
+		if (c == 'a')
+		{
+			asciiIO_t a1;
+			fileTest(&a1);
+		}
+		else if (c == 'b')
+		{
+			binIO_t b1;
+			fileTest(&b1);
+		}
+		else if (c == 'e')
+		{
+			i = 0;
+		}
+	}
+	return 0;
 }

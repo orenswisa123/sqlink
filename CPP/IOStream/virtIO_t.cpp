@@ -23,9 +23,9 @@ void virtIO_t::Print()const
     cout<<"Mode:"<<m_mode<<endl;
 }
 
-void virtIO_t::Fopen()
+void virtIO_t::Fopen(const char* name,const char* mode)
 {
-    m_fp = fopen(m_name.c_str(), m_mode.c_str());
+    m_fp = fopen(name, mode);
     if (!m_fp)
     {
         m_status = cant_open_file_e;

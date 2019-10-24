@@ -29,7 +29,7 @@ public:
         }  
     }
     void Print()const;
-    void Fopen();
+    void Fopen(const char*,const char*);
     virtual void setMode(string newMode) { m_mode = newMode; }
     size_t getfileLen() const;
     string getFileName() const { return m_name; }
