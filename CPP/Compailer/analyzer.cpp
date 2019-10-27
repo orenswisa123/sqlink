@@ -6,9 +6,6 @@
 #include<string>
 #include "analyzer.h"
 using namespace std;
-
-static bool EnclosureFuncCheck(const string &, const string, const string, int &, size_t);
-
 string analyzer_t::s_predefinedTypesStrings[] =
 	{"char", "short", "int", "long", "float", "double", "void"};
 string analyzer_t::s_keyWordsStrings[] =
@@ -77,41 +74,27 @@ void analyzer_t::analyzeLine(tokenizer_t &t, size_t lineNum)
         m_nextToken++;
     }
 }
-
-bool analyzer_t::CheckEnclosure(const string &_token, size_t _lineNum)
+bool analyzer_t::EnclosureFuncCheck(const string& _token, const string& _open, const string& _close,int&counter,  size_t _lineNum)
 {
-    return (EnclosureFuncCheck(_token, "{", "}", m_curlyBracCount, _lineNum) || EnclosureFuncCheck(_token, "(", ")", m_roundBracCount, _lineNum) || EnclosureFuncCheck(_token, "[", "]", m_squareBracCount, _lineNum));
-}
-bool analyzer_t::EnclosureFuncCheck(const string &_token, const string _open, const string _close, int &counter, size_t _lineNum)
-{
-    if (_open == _token || _token == _close)
-    {
-        if (m_predefTypeEncountered)
-        {
-            cout << "line " << _lineNum << ": error - illgel var name error" << endl;
-            m_predefTypeEncountered = false;
-        }
-        if (_token == _close)
-        {
-            if (counter > 0)
-            {
-                counter--;
-                return true;
-            }
-            else
-            {
-                cout << "line " << _lineNum << ": error - " << _token << " without " << _close << endl;
-                return true;
-            }
-            if (_token == _open)
-            {
-                counter++;
-                return true;
-            }
-        }
-    }
-    return false;
-}
+	if(_close == _token)
+	{
+		if(0 < counter)
+		{
+			--counter;
+		}else
+		{
+			cout<<"line "<<_lineNum<<": error - "<<_close<<" without "<<_open<<"\n"<<endl;
+		}
+		return true;
+	}
+	if(_open == _token)
+	{
+		++counter;
+		
+		return true;
+	}
+	return false;	
+} 
 bool analyzer_t::checkOperators(const string &_token, size_t _lineNum)
 {
     if (_token == "+")
@@ -127,7 +110,13 @@ bool analyzer_t::checkOperators(const string &_token, size_t _lineNum)
             m_minus = 0;
             return true;
         }
-        else if (_token == "-")
+        else
+        {
+            cout << "line " << _lineNum << ": error - no operator +++"<<endl;
+            m_plus=0;
+            return true;
+        }
+        if (_token == "-")
         {
             if (m_predefTypeEncountered)
             {
@@ -179,7 +168,9 @@ void analyzer_t::analyzeToken(const string &_token, size_t _lineNum)
     {
         return;
     }
-    if (CheckEnclosure(_token, _lineNum) || CheckEnclosureIFELSE(_token, _lineNum))
+    if ((EnclosureFuncCheck(_token,"(",")",m_roundBracCount,_lineNum) ||
+		EnclosureFuncCheck(_token,"[","]",m_squareBracCount,_lineNum) ||
+		EnclosureFuncCheck(_token,"{","}",m_curlyBracCount,_lineNum) || CheckEnclosureIFELSE(_token, _lineNum)))
     {
         return;
     }

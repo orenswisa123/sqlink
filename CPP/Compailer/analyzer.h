@@ -48,10 +48,10 @@ private:
 
     bool isValidVarName(const string &_token) const;
 
-    bool CheckEnclosure(const string &_token, size_t _lineNum);
+    //bool CheckEnclosure(const string &_token, size_t _lineNum);
 
     bool checkOperators(const string &_token, size_t _lineNum);
     bool CheckEnclosureIFELSE(const string &_token, size_t _lineNum);
-    bool EnclosureFuncCheck(const string &_token, const string _open, const string _close, int &counter, size_t _lineNum);
+    bool EnclosureFuncCheck(const string &_token, const string& _open, const string& _close, int &counter, size_t _lineNum);
 };
 #endif
