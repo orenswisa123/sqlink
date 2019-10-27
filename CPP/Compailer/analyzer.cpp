@@ -3,17 +3,34 @@
 #include <iostream>
 #include <vector>
 #include <iterator>
+#include<string>
 #include "analyzer.h"
+using namespace std;
+
+static bool EnclosureFuncCheck(const string &, const string, const string, int &, size_t);
 
 string analyzer_t::s_predefinedTypesStrings[] =
-    {"char", "short", "int", "long", "float", "double", "void"};
+	{"char", "short", "int", "long", "float", "double", "void"};
 string analyzer_t::s_keyWordsStrings[] =
-    {"if", "else", "for", "while", "class",
-     "private", "public", "protected", "main", "const", "virtual"};
+	{"if", "else", "for" , "while", "class", 
+		"private", "public", "protected", "main", "const", "virtual"};
 string analyzer_t::s_operatorsStrings[] =
-    {"++", "--", "==", "->", "=", "+", "-", "*", "&", "<<", ">>"};
+	{"++", "--", "==", "->" , "=", "+", "-", "*", "&", "<<", ">>"};
 string analyzer_t::s_predefTokensStrings[] =
-    {"(", ")", "[", "]", "{", "}", ";", "<", ">", "=", "+", "-", "*", "&"};
+	{"(", ")", "[", "]" , "{" , "}", ";", "<", ">" , "=", "+", "-", "*", "&"};
+
+#define NUMOFELEM(ARR) (sizeof(ARR)/sizeof((ARR)[0]))
+
+set<string> analyzer_t::s_predefinedTypes
+	(s_predefinedTypesStrings, s_predefinedTypesStrings + NUMOFELEM(s_predefinedTypesStrings));
+set<string> analyzer_t::s_keyWords
+	(s_keyWordsStrings, s_keyWordsStrings + NUMOFELEM(s_keyWordsStrings));
+set<string> analyzer_t::s_operators
+	(s_operatorsStrings, s_operatorsStrings + NUMOFELEM(s_operatorsStrings));
+set<string> analyzer_t::s_predefTokens
+	(s_predefTokensStrings, s_predefTokensStrings + NUMOFELEM(s_predefTokensStrings));
+
+
 
 void analyzer_t::initialAnalyzer()
 {
@@ -51,7 +68,7 @@ bool analyzer_t::isValidVarName(const string &_token) const
 void analyzer_t::analyzeLine(tokenizer_t &t, size_t lineNum)
 {
     vector<string>::iterator m_nextToken;
-    *(m_nextToken) = t.getVector().begin();
+    m_nextToken = t.getVector().begin();
 
     while (m_nextToken != t.getVector().end())
     {
@@ -65,14 +82,13 @@ bool analyzer_t::CheckEnclosure(const string &_token, size_t _lineNum)
 {
     return (EnclosureFuncCheck(_token, "{", "}", m_curlyBracCount, _lineNum) || EnclosureFuncCheck(_token, "(", ")", m_roundBracCount, _lineNum) || EnclosureFuncCheck(_token, "[", "]", m_squareBracCount, _lineNum));
 }
-
-static bool EnclosureFuncCheck(const string &_token, const string _open, const string _close, int &counter, size_t _lineNum)
+bool analyzer_t::EnclosureFuncCheck(const string &_token, const string _open, const string _close, int &counter, size_t _lineNum)
 {
     if (_open == _token || _token == _close)
     {
         if (m_predefTypeEncountered)
         {
-            cout << "line " << _lineNum << ": error - illgel var name error\n"<< endl;
+            cout << "line " << _lineNum << ": error - illgel var name error" << endl;
             m_predefTypeEncountered = false;
         }
         if (_token == _close)
@@ -84,12 +100,10 @@ static bool EnclosureFuncCheck(const string &_token, const string _open, const s
             }
             else
             {
-
-                cout << "line " << _lineNum << ": error - " << _token << " without " << _close << "\n"
-                     << endl;
+                cout << "line " << _lineNum << ": error - " << _token << " without " << _close << endl;
                 return true;
             }
-            else if (_token == _open)
+            if (_token == _open)
             {
                 counter++;
                 return true;
@@ -102,14 +116,25 @@ bool analyzer_t::checkOperators(const string &_token, size_t _lineNum)
 {
     if (_token == "+")
     {
+        if (m_predefTypeEncountered)
+        {
+            cout << "line " << _lineNum << ": error - illgel var name error\n";
+            m_predefTypeEncountered = false;
+        }
         if (m_plus < 2)
         {
             m_plus++;
             m_minus = 0;
             return true;
         }
-        else
+        else if (_token == "-")
         {
+            if (m_predefTypeEncountered)
+            {
+                cout << "line " << _lineNum << ": error - illgel var name error\n"
+                     << endl;
+                m_predefTypeEncountered = false;
+            }
             cout << "line " << _lineNum << ": error - no operator ";
             cout << _token << _token << _token << "\n"
                  << endl;
@@ -158,7 +183,7 @@ void analyzer_t::analyzeToken(const string &_token, size_t _lineNum)
     {
         return;
     }
-    if (s_predefinedTypesStrings.find(_token) != s_predefinedTypesStrings.end())
+    if (s_predefinedTypes.find(_token) != s_predefinedTypes.end())
     {
         if (m_predefTypeEncountered)
         {
@@ -174,9 +199,9 @@ void analyzer_t::analyzeToken(const string &_token, size_t _lineNum)
     }
     if (m_predefTypeEncountered)
     {
-        if (s_keyWordsStrings.find(_token) != s_keyWordsStrings.end() ||
-            s_operatorsStrings.find(_token) != s_operatorsStrings.end() ||
-            s_predefTokensStrings.find(_token) != s_predefTokensStrings.end())
+        if (s_keyWords.find(_token) != s_keyWords.end() ||
+            s_operators.find(_token) != s_operators.end() ||
+            s_predefTokens.find(_token) != s_predefTokens.end())
         {
             cout << "line " << _lineNum << ": error - illegal variable name\n"
                  << endl;
@@ -190,7 +215,7 @@ void analyzer_t::analyzeToken(const string &_token, size_t _lineNum)
             }
             else
             {
-                if (IsValidVarName(_token))
+                if (isValidVarName(_token))
                 {
                     m_symbolTable.insert(_token);
                 }
@@ -205,10 +230,10 @@ void analyzer_t::analyzeToken(const string &_token, size_t _lineNum)
     }
     else
     {
-        if (!(s_keyWordsStrings.find(_token) != s_keyWordsStrings.end() ||
-              s_operatorsStrings.find(_token) != s_operatorsStrings.end() ||
-              s_predefTokensStrings.find(_token) != s_predefTokensStrings.end()) &&
-            IsValidVarName(_token) &&
+        if (!(s_keyWords.find(_token) != s_keyWords.end() ||
+            s_operators.find(_token) != s_operators.end() ||
+            s_predefTokens.find(_token) != s_predefTokens.end()) &&
+            isValidVarName(_token) &&
             m_symbolTable.find(_token) == m_symbolTable.end())
         {
             cout << "line " << _lineNum << ": error - " << _token << " is not declared\n"
@@ -217,7 +242,7 @@ void analyzer_t::analyzeToken(const string &_token, size_t _lineNum)
     }
 }
 
-static bool CheckEnclosureIFELSE(const string &_token, size_t _lineNum)
+bool analyzer_t::CheckEnclosureIFELSE(const string &_token, size_t _lineNum)
 {
     if (_token == "else")
     {

@@ -20,7 +20,7 @@ void parser_t::parserFile(const string &fileName)
     size_t lineNumber = 1;
     while (getline(m_file, nextLine))
     {
-        m_tokenizer->tokenizer_t(nextLine);
+        m_tokenizer->tokenize(nextLine);
         if (m_tokenizer->getSize() > 0)
         {
             m_analyzer->analyzeLine(*m_tokenizer, lineNumber);

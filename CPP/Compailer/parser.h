@@ -14,7 +14,7 @@ public:
     void parserFile(const string &fileName);
 
 private:
-    parser_t(const parset_t &t);
+    parser_t(const parser_t &t);
     const parser_t &operator=(const parser_t &t);
     ifstream m_file;
     tokenizer_t *m_tokenizer;
